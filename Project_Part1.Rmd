@@ -3,9 +3,9 @@ title: "Exponential Distribution using Central Limit Theorem"
 author: "Aman Jindal"
 date: "21 August 2020"
 output:
-  word_document: default
-  pdf_document:
+  html_document:
     keep_md: yes
+  word_document: default
 ---
 
 ```{r, include=FALSE, message=FALSE, warning=FALSE}

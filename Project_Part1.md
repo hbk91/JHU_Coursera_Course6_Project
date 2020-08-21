@@ -1,14 +1,14 @@
 ---
-title: "Analyzing Exponential Distribution using Central Limit Theorem"
+title: "Exponential Distribution using Central Limit Theorem"
 author: "Aman Jindal"
 date: "21 August 2020"
-output: 
+output:
   html_document:
-    keep_md: true
+    keep_md: yes
+  word_document: default
 ---
 
 
-<br>
 
 ### 1. Overview:
 
@@ -18,22 +18,12 @@ Furthermore, mean of the distribution of averages is shown to be an unbiased est
 
 ***
 
-### 2. Installing Libraries:
-
-The following libraries are required:
-
-
-```r
-library(data.table)
-library(ggplot2)
-```
-
-***
-
-### 3. Simulations:
-
-* **Setting Parametes for simualtion**:
-1000 simulations have been performed with each simulation having a size of 40 random exponential values. The value of lambda is set as 0.2. A seed value is set, so that the code is reproducible.
+### 2. Simulations: The code below does the simulations in the following way:
+    * A seed is set to make the code reproducible
+    * Generates `nsim`*`sample_size` random exponential numbers
+    * Creates a `means_summary` dataframe to hold the averages of `nsim` simulations
+    * Creates an additional column `ExpRandoms` in `means_summary` dataframe containing `nsim` random exponential numbers. This is done to ,later on, compare distribution of averages with the distribution of exponentials
+    
 
 
 ```r
@@ -41,17 +31,7 @@ nsim <- 1000
 sample_size <- 40
 lambda <- 0.2
 set.seed(1234)
-```
 
-
-* **Simulation**: The code below does the simulations in the following way:
-    
-    * Generates `nsim`*`sample_size` random exponential numbers
-    * Creates a `means_summary` dataframe to hold the averages of `nsim` simulations
-    * Creates an additional column `ExpRandoms` in `means_summary` dataframe containing `nsim` random exponential numbers. This is done to ,later on, compare distribution of averages with the distribution of exponentials
-
-
-```r
 simulations <- matrix(data=rexp(n=nsim*sample_size,rate=lambda), nrow=nsim, ncol=sample_size)
 means_summary <- data.table(means=rowMeans(x=simulations))
 means_summary[, ExpRandoms := rexp(n=nsim, rate=lambda)]
@@ -59,7 +39,7 @@ means_summary[, ExpRandoms := rexp(n=nsim, rate=lambda)]
 
 ***
 
-### 4. Sample Mean vs Theoretical Mean:
+### 3. Sample Mean vs Theoretical Mean:
 
 Sample Mean is quite close to the Theoretical Mean. Thus Sample mean is an unbiased estimator of the population mean.
 
@@ -78,7 +58,7 @@ print(theoretical_mean_label)
 
 ***
 
-### 5. Sample Variance vs Theoretical Variance:
+### 4. Sample Variance vs Theoretical Variance:
 
 Theoretical Variance is $\frac{1}{sample\,size}$ times the variance of the exponential distribution. Thus, as the sample size for simulations increases, the variance of the distribution of averages decreases. Our sample variance is quite close to the theoretical variance of the averages distribution.
 
@@ -88,31 +68,20 @@ simulation_sd <- sd(means_summary[,means])
 theoretical_sd <- 1/lambda/sqrt(sample_size)
 
 print(paste('Simulation Variance', round(simulation_sd^2,4), sep=' = '))
-```
-
-```
 [1] "Simulation Variance = 0.595"
-```
-
-```r
 print(paste('Theorertical Variance', round(theoretical_sd^2,4), sep=' = '))
-```
-
-```
 [1] "Theorertical Variance = 0.625"
 ```
 
 ***
 
-### 6. Plotting the Distributions: The plots below show the following:
+### 5. Plotting the Distributions: The plots below show the following:
 
 * Distribution of the averages of the random exponentials (black)
 * Distribution of the random exponentials (green)
-* Simulation Mean (blue)
-* Theoretical Mean (red)
+* Simulation Mean (blue), Theoretical Mean (red)
 * Simulation and Theoretical Standard Deviations
 * A normal plot overlain on top of the distribtion of averages (black)
-
 
 We can infer the following from the figure:
 
@@ -146,11 +115,12 @@ ggplot(data=means_summary, mapping=aes(x=means)) +
   theme_bw() + xlim(0,20)
 ```
 
-![](Project_Part1_files/figure-html/unnamed-chunk-7-1.png)<!-- -->
+![](Project_Part1_files/figure-html/unnamed-chunk-5-1.png)<!-- -->
 
 ***
 
-###  7. Additional Proof of the normality of Averages Distribution:
+## Appendix
+### Additional Proof of the normality of Averages Distribution:
 
 The QQ Plot, shown below, of the averages distribution coincides with the theoretical line for a normal distribution.
 
@@ -161,5 +131,5 @@ ggplot(data=means_summary, mapping=aes(sample=means)) +
   labs(title='QQ Plot for Averages Distribution')
 ```
 
-![](Project_Part1_files/figure-html/unnamed-chunk-8-1.png)<!-- -->
+![](Project_Part1_files/figure-html/unnamed-chunk-6-1.png)<!-- -->
 
